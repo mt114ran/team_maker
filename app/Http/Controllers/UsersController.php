@@ -12,11 +12,17 @@ class UsersController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->paginate(10);
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $teams = $user->feed_teams()->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('users.index', [
-            'users' => $users,
-        ]);
+            $data = [
+                'user' => $user,
+                'teams' => $teams,
+            ];
+        }
+        return view('welcome', $data);
     }
     
     
